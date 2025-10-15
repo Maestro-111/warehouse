@@ -1,0 +1,53 @@
+# airflow-values.yaml
+
+# Use KubernetesExecutor
+executor: KubernetesExecutor
+
+# Airflow metadata database (Postgres)
+postgresql:
+  enabled: true
+  auth:
+    username: airflow
+    password: airflow
+    database: airflow
+
+# Disable Redis (since we’re not using CeleryExecutor)
+redis:
+  enabled: false
+
+# Webserver service exposed via GKE LoadBalancer
+web:
+  service:
+    type: LoadBalancer  # gives you an external IP on GKE
+
+# DAGs: store in persistent volume + auto sync from Git
+dags:
+  persistence:
+    enabled: true
+    size: 5Gi
+  gitSync:
+    enabled: true
+    repo: "https://github.com/Maestro-111/warehouse.git"
+    branch: main
+    subPath: "airflow/dags"       # folder inside repo
+    interval: 30          # how often to pull updates (seconds)
+
+# Persistent volume for logs
+logs:
+  persistence:
+    enabled: true
+    size: 5Gi
+
+# Airflow config tweaks
+config:
+  core:
+    load_examples: "True"
+  webserver:
+    expose_config: "True"
+
+# Create default admin user
+users:
+  - username: admin
+    password: admin
+    role: Admin
+    email: admin@example.com
