@@ -1,6 +1,46 @@
 [project]
 name = "warehouse"
-version = "0.1.0"
-description = "Add your description here"
-requires-python = ">=3.13"
-dependencies = []
+version = "1.0.0"
+description = "implementation of a custom warehouse"
+authors = [
+    { name = "Elin Huliiev" }
+]
+readme = "README.md"
+requires-python = ">=3.11,<4"
+
+# Main dependencies
+dependencies = [
+     "apache-airflow==3.1.0",
+     "apache-airflow-providers-cncf-kubernetes>=10.8.2",
+]
+
+# components dependencies
+[project.optional-dependencies]
+dev = [
+    "mypy>=1.11.0",
+    "pandas-stubs>=2.2.0",
+    "pre-commit==4.2.0",
+]
+
+# Build system
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = false
+warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = true
+disallow_untyped_decorators = false
+no_implicit_optional = true
+strict_optional = true
+
+explicit_package_bases = true
+namespace_packages = true
+
+ignore_missing_imports = true
+disable_error_code = ["operator", "assignment", "arg-type"]
+

@@ -1,0 +1,112 @@
+# airflow_values.yaml
+
+executor: KubernetesExecutor
+
+# Configure PostgreSQL
+postgresql:
+  enabled: true
+  auth:
+    username: airflow
+    password: airflow
+    database: airflow
+    postgresPassword: airflow
+  image:
+    registry: docker.io
+    repository: postgres
+    tag: "16"
+  primary:
+    resources:
+      requests:
+        memory: 256Mi
+        cpu: 250m
+      limits:
+        memory: 512Mi
+        cpu: 500m
+    persistence:
+      enabled: true
+      size: 1Gi
+
+# CRITICAL: Override the database connection string to use 'airflow' user
+data:
+  metadataConnection:
+    user: airflow
+    pass: airflow
+    protocol: postgresql
+    host: airflow-postgresql
+    port: 5432
+    db: airflow
+    sslmode: disable
+
+redis:
+  enabled: false
+
+statsd:
+  enabled: false
+
+scheduler:
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: 250m
+    limits:
+      memory: 1Gi
+      cpu: 500m
+
+webserver:
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: 250m
+    limits:
+      memory: 1Gi
+      cpu: 500m
+
+dagProcessor:
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: 250m
+    limits:
+      memory: 1Gi
+      cpu: 500m
+
+triggerer:
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
+web:
+  service:
+    type: LoadBalancer
+
+dags:
+  persistence:
+    enabled: true
+    size: 1Gi
+    storageClassName: standard-rwo
+  gitSync:
+    enabled: true
+    repo: "https://github.com/Maestro-111/warehouse.git"
+    branch: main
+    subPath: "airflow/dags"
+    rev: HEAD
+
+logs:
+  persistence:
+    enabled: false
+
+config:
+  core:
+    load_examples: "True"
+  webserver:
+    expose_config: "True"
+
+users:
+  - username: admin
+    password: admin
+    role: Admin
+    email: admin@example.com
